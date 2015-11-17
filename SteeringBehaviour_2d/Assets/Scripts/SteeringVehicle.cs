@@ -30,7 +30,7 @@ public class SteeringVehicle : MonoBehaviour {
 	void Seek () {
 
 		// we berekenen eerst de afstand/Vector tot de 'target' (in dit voorbeeld de andere cubus)		
-		Vector2 desiredStep	= target - rigidBody.position;
+		Vector2 desiredStep = target - rigidBody.position;
 
 		// deze desiredStep mag niet groter zijn dan de maximale Speed
 		//
@@ -49,7 +49,7 @@ public class SteeringVehicle : MonoBehaviour {
 		// uiteindelijk voegen we de steering force toe maar wel gedeeld door de 'mass'
 		// hierdoor gaat hij niet in een rechte lijn naar de target
 		// hoe zwaarder het object hoe moeilijker hij kan bijsturen
-		rigidBody.velocity = rigidBody.velocity + steeringForce / mass;
+		rigidBody.velocity =rigidBody.velocity + steeringForce / mass;
 
 		// @ code templates laten zien
 
