@@ -37,6 +37,13 @@ public class SteeringVehicle : MonoBehaviour {
 		currentTarget = target;
 	}
 
+	// van buitenaf kun je de huidige target uitlezen
+	public Vector2 Target {
+		get {
+			return currentTarget;
+		}
+	}
+
 	void Seek () {
 
 		// we berekenen eerst de afstand/Vector tot de 'target' (in dit voorbeeld het mikpunt)		
@@ -52,7 +59,7 @@ public class SteeringVehicle : MonoBehaviour {
 		// wordt de lengte van deze Vector maxSpeed (aangezien 1 x maxSpeed = maxSpeed)
 		// de x en y van deze Vector wordt zo vanzelf omgerekend
 		Vector2 desiredVelocity = desiredStep * maxSpeed;
-		
+
 		// bereken wat de Vector moet zijn om bij te sturen om bij de desiredVelocity te komen
 		Vector2 steeringForce = desiredVelocity - currentVelocity;
 
