@@ -3,34 +3,44 @@ using System.Collections;
 
 public class SteeringVehicle : MonoBehaviour {
 
-	/** gesorteerd op alfabet */
 	[SerializeField]
 	private float maxSpeed	=	5;
 
+	/** hoe zwaarder het object, hoe slechter hij kan bijsturen */
 	[SerializeField]
 	private float mass		=	20;
 
-	private Rigidbody2D rigidBody;
-	private Vector2 target;
-	
-	// Use this for initialization
+	/** boolean of het object de richting op kijkt waar we naar toe bewegen */
+	[SerializeField]
+	private bool followPath = false;
+
+	/** Vector om onze huidige velocity bij te houden (x en y stap) */
+	private Vector2 currentVelocity;
+	/** Vector om onze huidige positie bij te houden (x en y positie) */
+	private Vector2 currentPosition;
+	/** Vector om de locatie bij te houden waar we heen willen */
+	private Vector2 currentTarget;
+
 	void Start () {
-		rigidBody = GetComponent<Rigidbody2D>();
+		// we starten zonder beweging (geen velocity)
+		currentVelocity = new Vector2(0, 0);
+		// we nemen de huidige positie over in een eigen variabele
+		currentPosition = transform.position;
 	}
 	
-	// Update is called once per frame
-	void FixedUpdate () {
+	// Elke frametick kijken we hoe we moeten sturen
+	void Update () {
 		Seek();
 	}
-
+	
 	public void setTarget(Vector2 target) {
-		this.target = target;
+		currentTarget = target;
 	}
 
 	void Seek () {
 
-		// we berekenen eerst de afstand/Vector tot de 'target' (in dit voorbeeld de andere cubus)		
-		Vector2 desiredStep = target - rigidBody.position;
+		// we berekenen eerst de afstand/Vector tot de 'target' (in dit voorbeeld het mikpunt)		
+		Vector2 desiredStep = currentTarget - currentPosition;
 
 		// deze desiredStep mag niet groter zijn dan de maximale Speed
 		//
@@ -38,25 +48,27 @@ public class SteeringVehicle : MonoBehaviour {
 		// maar zijn lengte/magnitude is 1
 		desiredStep.Normalize();
 		
-		// als je deze weer vermenigvuldigt met de maximale snelheid dan
+		// als je deze genormaliseerde vector weer vermenigvuldigt met de maximale snelheid dan
 		// wordt de lengte van deze Vector maxSpeed (aangezien 1 x maxSpeed = maxSpeed)
 		// de x en y van deze Vector wordt zo vanzelf omgerekend
 		Vector2 desiredVelocity = desiredStep * maxSpeed;
 		
 		// bereken wat de Vector moet zijn om bij te sturen om bij de desiredVelocity te komen
-		Vector2 steeringForce = desiredVelocity - rigidBody.velocity;
+		Vector2 steeringForce = desiredVelocity - currentVelocity;
 
 		// uiteindelijk voegen we de steering force toe maar wel gedeeld door de 'mass'
 		// hierdoor gaat hij niet in een rechte lijn naar de target
-		// hoe zwaarder het object hoe moeilijker hij kan bijsturen
-		rigidBody.velocity =rigidBody.velocity + steeringForce / mass;
+		// hoe zwaarder het object des te groter de bocht
+		currentVelocity += steeringForce / mass;
 
-		// @ code templates laten zien
+		// Als laatste updaten we de positie door daar onze beweging (velocity) bij op te tellen
+		currentPosition += currentVelocity * Time.deltaTime;
+		transform.position = currentPosition;
 
-
-		// de goede kant op kijken
-		float angle = Mathf.Atan2(rigidBody.velocity.y, rigidBody.velocity.x) * Mathf.Rad2Deg;
-		rigidBody.MoveRotation(angle);
-		
+		// roteer het object in de goede richting
+		if(followPath){
+			float angle = Mathf.Atan2(currentVelocity.y, currentVelocity.x) * Mathf.Rad2Deg;
+			transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+		}
 	}
 }
