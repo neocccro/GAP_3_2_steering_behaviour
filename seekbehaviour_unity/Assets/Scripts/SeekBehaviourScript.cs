@@ -9,7 +9,7 @@ public class SeekBehaviourScript : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		rigidbody.velocity	=	new Vector3(0,1,1) * maxSpeed;
+		GetComponent<Rigidbody>().velocity	=	new Vector3(0,1,1) * maxSpeed;
 	}
 	
 	// Update is called once per frame
@@ -22,7 +22,7 @@ public class SeekBehaviourScript : MonoBehaviour {
 	void Seek () {
 		
 		// we berekenen eerst de afstand/Vector tot de 'target' (in dit voorbeeld de andere cubus)		
-		Vector3 desiredStep	=	target.position - rigidbody.position;		
+		Vector3 desiredStep	=	target.position - GetComponent<Rigidbody>().position;		
 				
 		// deze desiredStep mag niet groter zijn dan de maximale Speed
 		//
@@ -36,12 +36,12 @@ public class SeekBehaviourScript : MonoBehaviour {
 		Vector3 desiredVelocity			=	desiredStep	*	maxSpeed;
 		
 		// bereken wat de Vector moet zijn om bij te sturen om bij de desiredVelocity te komen
-		Vector3 steeringForce			=	desiredVelocity - rigidbody.velocity;
+		Vector3 steeringForce			=	desiredVelocity - GetComponent<Rigidbody>().velocity;
 		
 		// uiteindelijk voegen we de steering force toe maar wel gedeeld door de 'mass'
 		// hierdoor gaat hij niet in een rechte lijn naar de target
 		// hoe zwaarder het object hoe moeilijker hij kan bijsturen
-		rigidbody.velocity				=	rigidbody.velocity + steeringForce / mass;
+		GetComponent<Rigidbody>().velocity				=	GetComponent<Rigidbody>().velocity + steeringForce / mass;
 			
 		
 	}
