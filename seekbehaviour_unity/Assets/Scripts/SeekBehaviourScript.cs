@@ -6,7 +6,12 @@ public class SeekBehaviourScript : MonoBehaviour {
 	public Transform target;
 	private float maxSpeed	=	10;
 	private float mass		=	50;
-	
+
+
+	// onze belangrijkste vectoren voor nu: velocity en position
+	private Vector3 position = new Vector3();
+	private Vector3 velocity = new Vector3(3, 3, 3);
+
 	// Use this for initialization
 	void Start () {
 		GetComponent<Rigidbody>().velocity	=	new Vector3(0,1,1) * maxSpeed;
