@@ -12,16 +12,20 @@ public class AlertState : State {
 		currentAlarmTime = 0f;
 	}
 
-	public override void Act(){
-		float size = Random.Range(0.5f, 1.5f);
+	public override void Act()
+    {
+        float size = Mathf.Pow(2, Random.Range(0f, 2f) - 1);
 		transform.localScale = new Vector3(size, size, size);
 		currentAlarmTime += Time.deltaTime;
 	}
 
-	public override void Reason(){
+	public override void Reason()
+    {
 		if(currentAlarmTime > alertDuration)
-			GetComponent<StateMachine>().SetState( StateID.Fleeing);
-
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+            GetComponent<StateMachine>().SetState( StateID.Fleeing);
+        }
 	}
 
 }
